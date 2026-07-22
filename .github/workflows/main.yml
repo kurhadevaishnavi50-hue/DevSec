@@ -11,7 +11,6 @@ jobs:
   # ==========================================
   container-security:
     name: Container Build, Scan & Push (SCA Lifecycle)
-    needs: sonarcloud
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code Tree
@@ -22,12 +21,12 @@ jobs:
 
       - name: Build Local Production-Ready Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-sonar-project:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/DevSec:latest .
 
       - name: Run Aqua Security Trivy (Vulnerability Assessment)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/my-sonar-project:latest'
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/DevSec:latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -42,5 +41,5 @@ jobs:
 
       - name: Push Compliant Secure Image to DockerHub
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-sonar-project:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/DevSec:latest
 
